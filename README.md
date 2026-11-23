@@ -2,6 +2,10 @@
 
 Sistema web para cadastro de turmas e alunos, registro manual de presenca e utilizacao de reconhecimento facial com OpenCV. O projeto foi desenvolvido com base na especificacao localizada em `docs/presenca_escolar_reconhecimento_facial (3).docx`.
 
+## Contexto do projeto
+
+Projeto desenvolvido em aula no Curso Técnico em Desenvolvimento de Sistemas, com orientação do professor [Eduardo Hernandes](https://github.com/eduhernandes).
+
 ## Funcionalidades
 
 - Cadastro e consulta de turmas.
