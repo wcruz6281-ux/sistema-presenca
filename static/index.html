@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SESI Escolar | Controle de presença</title>
+<style>
+:root{--n:#102D50;--a:#0879C9;--ah:#0665A8;--ac:#EAF4FC;--bg:#F1F5F9;--t:#1E2F44;--ts:#6B7C93;--b:#E3E9F0;--g:#16A36A;--gc:#E1F6EC;--r:#DC4545;--rc:#FDE8E7;--o:#E9892B;--oc:#FDF0E1;--p:#7C5CE0;--pc:#EFEAFC;--sh:0 8px 28px rgba(16,45,80,.07)}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:"Segoe UI",system-ui,Arial,sans-serif;background:var(--bg);color:var(--t)}
+button,input,select{font:inherit}
+:focus-visible{outline:3px solid rgba(8,121,201,.4);outline-offset:2px}
+.ic{width:20px;height:20px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;flex-shrink:0}
+.app{display:flex;min-height:100vh}
+.side{width:262px;background:linear-gradient(180deg,#0D2441,#14406F);color:#fff;padding:24px 16px;position:sticky;top:0;height:100vh;display:flex;flex-direction:column;flex-shrink:0}
+.brand{display:flex;align-items:center;gap:12px;padding:4px 10px 28px}
+.brand i{width:42px;height:42px;border-radius:12px;background:linear-gradient(135deg,#27A1F0,#0879C9);display:grid;place-items:center;font:800 20px/1 "Segoe UI";font-style:normal;box-shadow:0 6px 16px rgba(8,121,201,.45)}
+.brand b{display:block;font-size:15px;letter-spacing:.8px}.brand span{font-size:11px;color:#9FB6D0}
+.lab{font-size:10px;font-weight:700;letter-spacing:1.4px;color:#7F97B3;padding:6px 12px 8px}
+.nav{display:flex;flex-direction:column;gap:4px}
+.nav button{display:flex;align-items:center;gap:12px;border:0;background:none;color:#CFDCEB;padding:12px 13px;border-radius:10px;cursor:pointer;text-align:left;font-size:14px;transition:.2s}
+.nav button:hover{background:rgba(255,255,255,.09);color:#fff}
+.nav button.on{background:var(--a);color:#fff;font-weight:600;box-shadow:0 6px 16px rgba(8,121,201,.4)}
+.sf{margin-top:auto;border-top:1px solid rgba(255,255,255,.14);padding:16px 10px 0;display:flex;gap:11px;align-items:center;font-size:12px;color:#9FB6D0}
+.sf b{display:block;color:#fff;font-size:13px}.dot{width:10px;height:10px;border-radius:50%;background:#35D08C;box-shadow:0 0 0 4px rgba(53,208,140,.2)}
+main{flex:1;min-width:0}
+.top{height:76px;background:#fff;border-bottom:1px solid var(--b);display:flex;align-items:center;justify-content:space-between;padding:0 34px;position:sticky;top:0;z-index:5}
+.top small{font-size:11px;font-weight:700;letter-spacing:1.2px;color:var(--a)}.top h1{font-size:21px;color:var(--n)}
+#data{font-size:13px;color:var(--ts);text-transform:capitalize}
+.wrap{max-width:1250px;margin:auto;padding:30px 34px 40px}
+.sec[hidden]{display:none}.sec{animation:in .3s ease}@keyframes in{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.hero{background:linear-gradient(120deg,#0D2441,#0879C9);color:#fff;border-radius:18px;padding:30px 32px;margin-bottom:24px;box-shadow:var(--sh);position:relative;overflow:hidden}
+.hero:after{content:"";position:absolute;right:-60px;top:-80px;width:280px;height:280px;border-radius:50%;background:rgba(255,255,255,.08)}
+.hero h2{font-size:26px;margin-bottom:6px}.hero p{color:#DCEBF8;max-width:520px;line-height:1.6;font-size:14px}
+.grid4{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:18px;margin-bottom:24px}
+.card{background:#fff;border:1px solid var(--b);border-radius:15px;padding:22px;box-shadow:var(--sh)}
+.kpi{transition:.2s}.kpi:hover{transform:translateY(-3px);box-shadow:0 14px 32px rgba(16,45,80,.12)}
+.kic{width:44px;height:44px;border-radius:12px;display:grid;place-items:center;margin-bottom:16px}
+.kpi span{font-size:12px;font-weight:600;color:var(--ts)}.kpi h3{font-size:30px;color:var(--n);margin:2px 0 4px}.kpi p{font-size:12px;color:var(--ts)}
+.two{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.5fr);gap:18px}
+.card h3.tt{font-size:16px;color:var(--n);margin-bottom:4px}.card .sub{font-size:13px;color:var(--ts);margin-bottom:18px}
+.donut{position:relative;width:190px;height:190px;margin:8px auto 14px}
+.donut svg{width:100%;height:100%;transform:rotate(-90deg)}
+.donut .c{position:absolute;inset:0;display:grid;place-content:center;text-align:center}
+.donut .c b{font-size:34px;color:var(--n)}.donut .c span{font-size:12px;color:var(--ts)}
+.leg{display:flex;justify-content:center;gap:18px;font-size:12px;color:var(--ts)}.leg i{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:6px}
+ul{list-style:none}.rec,.linha{display:flex;align-items:center;gap:13px;padding:12px 4px;border-bottom:1px solid var(--b)}
+.rec:last-child,.linha:last-child{border-bottom:0}
+.av{width:40px;height:40px;border-radius:50%;background:var(--ac);color:var(--a);display:grid;place-items:center;font-weight:700;font-size:13px;flex-shrink:0}
+.ri{flex:1;min-width:0}.ri strong{display:block;font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.ri span{font-size:12px;color:var(--ts)}
+.tag{display:inline-block;padding:5px 12px;border-radius:20px;font-size:11px;font-weight:700}.tag.ok{background:var(--gc);color:#087A4B}.tag.no{background:var(--rc);color:#B42318}
+.vazio{padding:26px;text-align:center;color:var(--ts);font-size:13px}
+.ph{display:flex;align-items:center;justify-content:space-between;gap:14px;margin-bottom:18px;flex-wrap:wrap}
+.ph h3{font-size:17px;color:var(--n)}.ph p{font-size:13px;color:var(--ts);margin-top:2px}
+.fg{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;margin-bottom:18px}.full{grid-column:1/-1}
+label{display:block;font-size:13px;font-weight:600;margin-bottom:7px}
+input,select{width:100%;padding:12px 14px;border:1px solid #CBD5E1;border-radius:10px;background:#fff;color:var(--t);outline:0;transition:.2s}
+input:focus,select:focus{border-color:var(--a);box-shadow:0 0 0 3px rgba(8,121,201,.13)}
+.srch{position:relative;max-width:380px;flex:1}.srch .ic{position:absolute;left:13px;top:13px;color:var(--ts);width:18px;height:18px}.srch input{padding-left:40px}
+.btn{border:0;border-radius:10px;padding:11px 18px;font-weight:600;font-size:13px;cursor:pointer;background:var(--a);color:#fff;transition:.2s;white-space:nowrap}
+.btn:hover{background:var(--ah)}.btn:active{transform:translateY(1px)}.btn.ok{background:var(--gc);color:#087A4B;cursor:default}
+.btn.sec2{background:#fff;color:var(--a);border:1px solid #CBD5E1}.btn.sec2:hover{background:var(--ac)}
+.btn:disabled{opacity:.85}
+.tw{overflow-x:auto}table{width:100%;border-collapse:collapse;min-width:520px}
+th,td{padding:14px 15px;text-align:left;border-bottom:1px solid var(--b);font-size:13px}
+th{font-size:11px;text-transform:uppercase;letter-spacing:.6px;color:var(--ts);background:#F7F9FC}tbody tr:hover{background:#F7FAFD}tbody tr:last-child td{border:0}
+.tgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:16px}
+.tc{border:1px solid var(--b);border-radius:14px;padding:18px;display:flex;gap:14px;align-items:center;background:#fff}
+.tc .kic{margin:0;background:var(--pc);color:var(--p)}.tc strong{display:block;color:var(--n)}.tc span{font-size:12px;color:var(--ts)}
+#toasts{position:fixed;right:22px;bottom:22px;display:flex;flex-direction:column;gap:10px;z-index:50}
+.toast{background:#fff;border-left:5px solid var(--g);box-shadow:0 12px 34px rgba(16,45,80,.18);padding:14px 18px;border-radius:10px;font-size:13px;max-width:340px;animation:in .25s}
+.toast.erro{border-color:var(--r)}.toast.info{border-color:var(--o)}
+.rosto{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);gap:18px;align-items:start}
+.cam{position:relative;background:#0D2441;border-radius:16px;overflow:hidden;aspect-ratio:4/3}
+.cam video{width:100%;height:100%;object-fit:cover;transform:scaleX(-1)}
+.cam .guia{position:absolute;inset:10% 29%;border:3px dashed rgba(255,255,255,.7);border-radius:50%;pointer-events:none}
+.cam .off{position:absolute;inset:0;display:grid;place-items:center;color:#9FB6D0;font-size:13px;text-align:center;padding:20px}
+.chk{display:flex;gap:10px;align-items:flex-start;font-size:13px;font-weight:400;line-height:1.5;margin-bottom:16px}.chk input{width:auto;margin-top:4px}
+.btns{display:flex;gap:10px;flex-wrap:wrap}
+.prog{height:8px;background:#E8EEF5;border-radius:8px;overflow:hidden;margin:16px 0}.prog i{display:block;height:100%;width:0;background:var(--g);transition:width .3s}
+@media(max-width:1000px){.grid4{grid-template-columns:repeat(2,minmax(0,1fr))}.two,.rosto{grid-template-columns:1fr}}
+@media(max-width:800px){.app{flex-direction:column}.side{width:100%;height:auto;position:static;padding:14px}.brand{padding-bottom:12px}.lab,.sf{display:none}
+.nav{flex-direction:row;overflow-x:auto}.nav button{padding:10px 12px;white-space:nowrap}.top{padding:0 18px;height:64px;position:static}#data{display:none}
+.wrap{padding:18px}.grid4,.fg{grid-template-columns:1fr}.hero{padding:22px}}
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+<symbol id="i-home" viewBox="0 0 24 24"><path d="M3 11l9-8 9 8v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/></symbol>
+<symbol id="i-check" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="m8 12 3 3 5-6"/></symbol>
+<symbol id="i-users" viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c0-3.6 2.9-6 6.5-6s6.5 2.4 6.5 6M16 4.8a3.5 3.5 0 0 1 0 6.4M18 14.4c2 .8 3.5 2.7 3.5 5.6"/></symbol>
+<symbol id="i-grid" viewBox="0 0 24 24"><path d="M4 4h7v7H4zM13 4h7v7h-7zM4 13h7v7H4zM13 13h7v7h-7z"/></symbol>
+<symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></symbol>
+<symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></symbol>
+<symbol id="i-face" viewBox="0 0 24 24"><path d="M4 8V5a1 1 0 0 1 1-1h3M16 4h3a1 1 0 0 1 1 1v3M20 16v3a1 1 0 0 1-1 1h-3M8 20H5a1 1 0 0 1-1-1v-3"/><circle cx="12" cy="10.5" r="2.5"/><path d="M7.5 17c.8-2 2.5-3 4.5-3s3.7 1 4.5 3"/></symbol>
+</defs></svg>
+
+<div class="app">
+<aside class="side">
+  <div class="brand"><i>S</i><div><b>SESI ESCOLAR</b><span>Controle de presença</span></div></div>
+  <div class="lab">MENU PRINCIPAL</div>
+  <nav class="nav">
+    <button data-go="inicio" class="on"><svg class="ic"><use href="#i-home"/></svg>Visão geral</button>
+    <button data-go="presenca"><svg class="ic"><use href="#i-check"/></svg>Registrar presença</button>
+    <button data-go="alunos"><svg class="ic"><use href="#i-users"/></svg>Alunos</button>
+    <button data-go="turmas"><svg class="ic"><use href="#i-grid"/></svg>Turmas</button>
+    <button data-go="rosto"><svg class="ic"><use href="#i-face"/></svg>Cadastro facial</button>
+  </nav>
+  <div class="sf"><div class="dot"></div><div><b>Sistema operacional</b>Ambiente administrativo</div></div>
+</aside>
+
+<main>
+<header class="top"><div><small>GESTÃO ESCOLAR</small><h1 id="titulo">Visão geral</h1></div><div id="data"></div></header>
+<div class="wrap">
+
+<section class="sec" id="s-inicio">
+  <div class="hero"><h2 id="saud">Olá!</h2><p>Acompanhe em tempo real a frequência dos alunos, registre presenças e gerencie turmas em um só lugar.</p></div>
+  <div class="grid4">
+    <article class="card kpi"><div class="kic" style="background:var(--ac);color:var(--a)"><svg class="ic"><use href="#i-users"/></svg></div><span>Alunos ativos</span><h3 id="k-ativos">—</h3><p id="k-sub">&nbsp;</p></article>
+    <article class="card kpi"><div class="kic" style="background:var(--pc);color:var(--p)"><svg class="ic"><use href="#i-grid"/></svg></div><span>Turmas</span><h3 id="k-turmas">—</h3><p>Turmas cadastradas</p></article>
+    <article class="card kpi"><div class="kic" style="background:var(--gc);color:var(--g)"><svg class="ic"><use href="#i-check"/></svg></div><span>Presenças hoje</span><h3 id="k-pres">—</h3><p>Alunos ativos presentes</p></article>
+    <article class="card kpi"><div class="kic" style="background:var(--oc);color:var(--o)"><svg class="ic"><use href="#i-clock"/></svg></div><span>Sem registro hoje</span><h3 id="k-sem">—</h3><p>Ainda sem presença</p></article>
+  </div>
+  <div class="two">
+    <div class="card"><h3 class="tt">Frequência de hoje</h3><p class="sub">Alunos ativos com presença registrada</p>
+      <div class="donut"><svg viewBox="0 0 120 120"><circle cx="60" cy="60" r="52" fill="none" stroke="#E8EEF5" stroke-width="12"/><circle id="anel" cx="60" cy="60" r="52" fill="none" stroke="#16A36A" stroke-width="12" stroke-linecap="round" pathLength="100" stroke-dasharray="0 100" style="transition:stroke-dasharray .8s ease"/></svg><div class="c"><b id="pct">0%</b><span>presentes</span></div></div>
+      <div class="leg"><span><i style="background:#16A36A"></i>Presentes</span><span><i style="background:#E8EEF5"></i>Sem registro</span></div>
+    </div>
+    <div class="card"><div class="ph" style="margin-bottom:6px"><div><h3 class="tt">Registros recentes</h3><p class="sub" style="margin:0">Últimas presenças registradas</p></div><button class="btn sec2" id="b-atual">Atualizar</button></div><ul id="recentes"></ul></div>
+  </div>
+</section>
+
+<section class="sec" id="s-presenca" hidden>
+  <div class="card">
+    <div class="ph"><div><h3>Registrar presença</h3><p>Busque o aluno e confirme a presença de hoje.</p></div>
+      <div class="srch"><svg class="ic"><use href="#i-search"/></svg><input id="busca-p" placeholder="Buscar por nome ou matrícula" aria-label="Buscar aluno"></div></div>
+    <div id="lista-p"></div>
+  </div>
+</section>
+
+<section class="sec" id="s-alunos" hidden>
+  <div class="card" style="margin-bottom:22px">
+    <div class="ph"><div><h3>Cadastrar novo aluno</h3><p>Preencha os dados do estudante.</p></div></div>
+    <form id="f-aluno"><div class="fg">
+      <div><label for="nome">Nome completo</label><input id="nome" required maxlength="150" placeholder="Digite o nome do aluno"></div>
+      <div><label for="matricula">Matrícula</label><input id="matricula" required maxlength="30" placeholder="Digite a matrícula"></div>
+      <div class="full"><label for="turma">Turma</label><select id="turma"><option value="">Sem turma</option></select></div>
+    </div><button class="btn" type="submit">+ Cadastrar aluno</button></form>
+  </div>
+  <div class="card">
+    <div class="ph"><div><h3>Alunos cadastrados</h3><p>Consulte e filtre os registros.</p></div>
+      <div class="srch"><svg class="ic"><use href="#i-search"/></svg><input id="busca-a" placeholder="Buscar por nome ou matrícula" aria-label="Buscar aluno"></div></div>
+    <div class="tw" id="lista-a"></div>
+  </div>
+</section>
+
+<section class="sec" id="s-turmas" hidden>
+  <div class="card" style="margin-bottom:22px">
+    <div class="ph"><div><h3>Cadastrar nova turma</h3><p>Informe os dados da turma.</p></div></div>
+    <form id="f-turma"><div class="fg">
+      <div><label for="nome-t">Nome da turma</label><input id="nome-t" required maxlength="100" placeholder="Ex.: 2º Ano A"></div>
+      <div><label for="ano-t">Ano letivo</label><input id="ano-t" type="number" min="2000" max="2100" required placeholder="Ex.: 2026"></div>
+    </div><button class="btn" type="submit">+ Cadastrar turma</button></form>
+  </div>
+  <div class="card"><div class="ph"><div><h3>Turmas cadastradas</h3><p>Organização por ano letivo.</p></div></div><div class="tgrid" id="lista-t"></div></div>
+</section>
+
+<section class="sec" id="s-rosto" hidden>
+  <div class="rosto">
+    <div class="card">
+      <div class="ph"><div><h3>Câmera</h3><p id="rosto-msg">Selecione o aluno e ligue a câmera.</p></div></div>
+      <div class="cam"><video id="video" playsinline muted></video><div class="guia"></div><div class="off" id="cam-off">Câmera desligada</div></div>
+    </div>
+    <div class="card">
+      <div class="ph"><div><h3>Cadastro facial</h3><p>Associe o rosto ao aluno.</p></div></div>
+      <div style="margin-bottom:16px"><label for="sel-rosto">Aluno</label><select id="sel-rosto"><option value="">Selecione o aluno</option></select></div>
+      <label class="chk"><input type="checkbox" id="consent"><span>Confirmo que o responsável pelo aluno autorizou o uso do reconhecimento facial.</span></label>
+      <div class="btns"><button class="btn sec2" type="button" id="b-cam">Ligar câmera</button><button class="btn" type="button" id="b-cap" disabled>Capturar rosto</button><button class="btn sec2" type="button" id="b-treinar">Treinar modelo</button></div>
+      <div class="prog"><i id="prog-i"></i></div>
+      <p style="font-size:12px;color:var(--ts);line-height:1.6">O sistema tira cerca de 20 fotos do rosto; peça ao aluno para mover levemente a cabeça entre elas. Depois de cadastrar todos os alunos, clique em <b>Treinar modelo</b> e reinicie o reconhecer_rosto.py. As fotos ficam na pasta rostos_alunos do servidor.</p>
+    </div>
+  </div>
+</section>
+
+</div>
+</main>
+</div>
+<div id="toasts" role="status" aria-live="polite"></div>
+
+<script>
+const $=i=>document.getElementById(i);
+const h=(t,c,x)=>{const e=document.createElement(t);if(c)e.className=c;if(x!==undefined)e.textContent=x;return e};
+const TIT={inicio:"Visão geral",presenca:"Registrar presença",alunos:"Alunos",turmas:"Turmas",rosto:"Cadastro facial"};
+let alunos=[],turmas=[],feitos=new Set();
+
+async function api(url,opts){const r=await fetch(url,opts);let d=null;try{d=await r.json()}catch(e){}
+  if(!r.ok)throw new Error((d&&typeof d.detail==="string"&&d.detail)||"Erro "+r.status);return d}
+function toast(msg,tipo){const t=h("div","toast "+(tipo||"ok"),msg);$("toasts").appendChild(t);setTimeout(()=>t.remove(),4200)}
+const falha=e=>toast(e.message,"erro");
+const ini=n=>n.trim().split(/\s+/).slice(0,2).map(p=>p[0]).join("").toUpperCase();
+const dataBR=i=>i.split("-").reverse().join("/");
+const nomeTurma=id=>{const t=turmas.find(x=>x.id===id);return t?t.nome:"Sem turma"};
+const carregarAlunos=async()=>{alunos=await api("/alunos")};
+const carregarTurmas=async()=>{turmas=await api("/turmas")};
+
+function ir(s){
+  if(s!=="rosto")pararCamera();
+  document.querySelectorAll(".sec").forEach(e=>e.hidden=e.id!=="s-"+s);
+  document.querySelectorAll(".nav button").forEach(b=>b.classList.toggle("on",b.dataset.go===s));
+  $("titulo").textContent=TIT[s];
+  if(s==="inicio")resumo();
+  if(s==="presenca")Promise.all([carregarTurmas(),carregarAlunos()]).then(listaPresenca).catch(falha);
+  if(s==="alunos")Promise.all([carregarTurmas(),carregarAlunos()]).then(()=>{opcoesTurma();tabelaAlunos()}).catch(falha);
+  if(s==="rosto")prepararRosto();
+  if(s==="turmas")carregarTurmas().then(cardsTurmas).catch(falha);
+}
+
+async function resumo(){try{const d=await api("/dashboard/resumo");
+  $("k-ativos").textContent=d.alunos_ativos;$("k-sub").textContent="de "+d.total_alunos+" cadastrados";
+  $("k-turmas").textContent=d.total_turmas;$("k-pres").textContent=d.presencas_hoje;$("k-sem").textContent=d.sem_registro_hoje;
+  const pct=d.alunos_ativos?Math.min(100,Math.round(d.presencas_hoje/d.alunos_ativos*100)):0;
+  $("anel").setAttribute("stroke-dasharray",pct+" 100");$("pct").textContent=pct+"%";
+  const ul=$("recentes");ul.replaceChildren();
+  if(!d.registros_recentes.length)ul.appendChild(h("li","vazio","Nenhuma presença registrada ainda."));
+  d.registros_recentes.forEach(r=>{const li=h("li","rec");li.appendChild(h("div","av",ini(r.aluno)));
+    const m=h("div","ri");m.appendChild(h("strong","",r.aluno));m.appendChild(h("span","",r.matricula+" · "+dataBR(r.data)));
+    li.appendChild(m);li.appendChild(h("span","tag ok",r.hora.slice(0,5)));ul.appendChild(li)});
+}catch(e){falha(e)}}
+
+function listaPresenca(){const q=$("busca-p").value.trim().toLowerCase(),box=$("lista-p");box.replaceChildren();
+  const l=alunos.filter(a=>a.ativo&&(a.nome.toLowerCase().includes(q)||String(a.matricula).toLowerCase().includes(q)));
+  if(!l.length){box.appendChild(h("div","vazio","Nenhum aluno ativo encontrado."));return}
+  l.forEach(a=>{const row=h("div","linha"),ok=feitos.has(a.id);row.appendChild(h("div","av",ini(a.nome)));
+    const m=h("div","ri");m.appendChild(h("strong","",a.nome));m.appendChild(h("span","",a.matricula+" · "+nomeTurma(a.turma_id)));row.appendChild(m);
+    const b=h("button","btn"+(ok?" ok":""),ok?"Registrado":"Registrar presença");b.disabled=ok;b.onclick=()=>registrar(a,b);row.appendChild(b);box.appendChild(row)})}
+async function registrar(a,b){b.disabled=true;try{
+  const d=await api("/presencas/registrar",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({aluno_id:a.id})});
+  feitos.add(a.id);const hr=d.hora.slice(0,5);
+  toast(d.duplicada?a.nome+": presença já registrada hoje ("+hr+")":"Presença de "+a.nome+" registrada às "+hr,d.duplicada?"info":"ok");listaPresenca();
+}catch(e){b.disabled=false;falha(e)}}
+
+function opcoesTurma(){const s=$("turma"),v=s.value;s.replaceChildren();const o=h("option","","Sem turma");o.value="";s.appendChild(o);
+  turmas.forEach(t=>{const x=h("option","",t.nome+" — "+t.ano_letivo);x.value=t.id;s.appendChild(x)});s.value=v}
+function tabelaAlunos(){const q=$("busca-a").value.trim().toLowerCase(),box=$("lista-a");box.replaceChildren();
+  if(!alunos.length){box.appendChild(h("div","vazio","Nenhum aluno cadastrado."));return}
+  const l=alunos.filter(a=>a.nome.toLowerCase().includes(q)||String(a.matricula).toLowerCase().includes(q));
+  if(!l.length){box.appendChild(h("div","vazio","Nenhum aluno encontrado para essa busca."));return}
+  const t=h("table"),hd=h("tr");["Aluno","Matrícula","Turma","Situação"].forEach(x=>{const th=h("th","",x);th.scope="col";hd.appendChild(th)});
+  t.appendChild(h("thead")).appendChild(hd);const tb=h("tbody");
+  l.forEach(a=>{const tr=h("tr");const c=h("td");const w=h("div");w.style.cssText="display:flex;align-items:center;gap:11px";w.appendChild(h("div","av",ini(a.nome)));w.appendChild(h("strong","",a.nome));c.appendChild(w);tr.appendChild(c);
+    tr.appendChild(h("td","",a.matricula));tr.appendChild(h("td","",nomeTurma(a.turma_id)));
+    const s=h("td");s.appendChild(h("span","tag "+(a.ativo?"ok":"no"),a.ativo?"Ativo":"Inativo"));tr.appendChild(s);tb.appendChild(tr)});
+  t.appendChild(tb);box.appendChild(t)}
+function cardsTurmas(){const box=$("lista-t");box.replaceChildren();
+  if(!turmas.length){box.appendChild(h("div","vazio","Nenhuma turma cadastrada."));return}
+  turmas.forEach(t=>{const c=h("div","tc"),i=h("div","kic");i.innerHTML='<svg class="ic"><use href="#i-grid"/></svg>';c.appendChild(i);
+    const d=h("div");d.appendChild(h("strong","",t.nome));d.appendChild(h("span","","Ano letivo "+t.ano_letivo));c.appendChild(d);box.appendChild(c)})}
+
+$("f-aluno").onsubmit=async e=>{e.preventDefault();
+  const p=new URLSearchParams({nome:$("nome").value.trim(),matricula:$("matricula").value.trim()});if($("turma").value)p.append("turma_id",$("turma").value);
+  try{const d=await api("/alunos?"+p,{method:"POST"});toast(d.mensagem);e.target.reset();await carregarAlunos();tabelaAlunos()}catch(x){falha(x)}};
+$("f-turma").onsubmit=async e=>{e.preventDefault();
+  const p=new URLSearchParams({nome:$("nome-t").value.trim(),ano_letivo:$("ano-t").value});
+  try{const d=await api("/turmas?"+p,{method:"POST"});toast(d.mensagem);e.target.reset();await carregarTurmas();cardsTurmas()}catch(x){falha(x)}};
+
+// ---------- Cadastro facial ----------
+// O navegador tira fotos da webcam; o servidor (OpenCV) detecta o rosto e
+// salva em rostos_alunos/aluno_ID, o mesmo formato do treinar_rosto.py.
+const ALVO=20,esperar=ms=>new Promise(r=>setTimeout(r,ms));
+let stream=null,imagensPorAluno={};
+async function carregarRostos(){try{const l=await api("/rostos/status");imagensPorAluno={};l.forEach(r=>imagensPorAluno[r.aluno_id]=r.imagens)}catch(e){imagensPorAluno={}}}
+function opcoesRosto(){const s=$("sel-rosto"),v=s.value;s.replaceChildren();const o=h("option","","Selecione o aluno");o.value="";s.appendChild(o);
+  alunos.filter(a=>a.ativo).forEach(a=>{const n=imagensPorAluno[a.id]||0;const x=h("option","",a.nome+" ("+a.matricula+") · "+(n?n+" imagens":"sem rosto"));x.value=a.id;s.appendChild(x)});s.value=v}
+async function prepararRosto(){try{$("rosto-msg").textContent="Selecione o aluno e ligue a câmera.";await Promise.all([carregarAlunos(),carregarRostos()]);opcoesRosto()}catch(e){falha(e)}}
+async function ligarCamera(){try{
+  stream=await navigator.mediaDevices.getUserMedia({video:{width:640,height:480}});
+  $("video").srcObject=stream;await $("video").play();$("cam-off").hidden=true;$("b-cap").disabled=false;
+  $("rosto-msg").textContent="Câmera ligada. Posicione o rosto dentro do oval."}
+  catch(e){toast(e.name==="NotAllowedError"?"Permissão da câmera negada pelo navegador.":"Não foi possível abrir a câmera. Feche outros programas que a usam.","erro")}}
+function pararCamera(){if(stream){stream.getTracks().forEach(t=>t.stop());stream=null}
+  $("video").srcObject=null;$("cam-off").hidden=false;$("b-cap").disabled=true}
+function quadro(){const v=$("video"),c=document.createElement("canvas");c.width=v.videoWidth;c.height=v.videoHeight;c.getContext("2d").drawImage(v,0,0);return c.toDataURL("image/jpeg",.9)}
+async function capturar(){const id=$("sel-rosto").value;
+  if(!id)return toast("Selecione um aluno.","info");
+  if(!$("consent").checked)return toast("Confirme a autorização do responsável.","info");
+  const btn=$("b-cap");btn.disabled=true;let salvas=0,tent=0;$("prog-i").style.width="0";
+  while(salvas<ALVO&&tent<ALVO*3){tent++;
+    try{const r=await api("/alunos/"+id+"/rosto/imagem",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({imagem:quadro()})});
+      imagensPorAluno[id]=r.total;
+      if(r.salvo){salvas++;$("rosto-msg").textContent="Capturando "+salvas+"/"+ALVO+". Mova levemente a cabeça.";$("prog-i").style.width=Math.round(salvas/ALVO*100)+"%"}
+      else if(r.motivo==="limite"){toast("Esse aluno já tem o máximo de imagens.","info");break}
+      else $("rosto-msg").textContent=r.motivo==="varios_rostos"?"Mais de um rosto na imagem. Deixe só o aluno.":"Rosto não encontrado. Centralize o rosto e melhore a luz."
+    }catch(e){falha(e);break}
+    await esperar(450)}
+  opcoesRosto();btn.disabled=false;
+  if(salvas>0){$("rosto-msg").textContent=salvas+" imagens salvas. Clique em Treinar modelo.";toast(salvas+" imagens salvas.")}}
+async function treinar(){const b=$("b-treinar");b.disabled=true;$("rosto-msg").textContent="Treinando modelo...";
+  try{const r=await api("/rostos/treinar",{method:"POST"});toast(r.mensagem);$("rosto-msg").textContent="Modelo atualizado. Reinicie o reconhecer_rosto.py para usá-lo."}
+  catch(e){falha(e);$("rosto-msg").textContent="Falha ao treinar o modelo."}
+  b.disabled=false}
+$("b-cam").onclick=ligarCamera;$("b-cap").onclick=capturar;$("b-treinar").onclick=treinar;
+
+document.querySelectorAll(".nav button").forEach(b=>b.onclick=()=>ir(b.dataset.go));
+$("busca-p").oninput=listaPresenca;$("busca-a").oninput=tabelaAlunos;$("b-atual").onclick=resumo;
+
+const hr=new Date().getHours();
+$("saud").textContent=(hr<12?"Bom dia":hr<18?"Boa tarde":"Boa noite")+", administrador!";
+$("data").textContent=new Date().toLocaleDateString("pt-BR",{weekday:"long",day:"numeric",month:"long",year:"numeric"});
+setInterval(()=>{if(!$("s-inicio").hidden)resumo()},30000);
+ir("inicio");
+</script>
+</body>
+</html>

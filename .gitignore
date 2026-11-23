@@ -1,0 +1,27 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+.venv/
+venv/
+env/
+
+# Banco de dados e backups
+*.db
+*.sqlite
+*.sqlite3
+*_backup.db
+
+# Modelo e imagens geradas
+modelo_rosto.yml
+rostos_alunos/
+rostos_teste/
+
+# Arquivos temporarios e logs
+*.log
+*.tmp
+.DS_Store
+Thumbs.db
+
+# VS Code
+.vscode/
